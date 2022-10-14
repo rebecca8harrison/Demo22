@@ -1,5 +1,4 @@
 # Import packages
-import matplotlib.pyplot as plt
 import random
 from IPython.display import clear_output
 
