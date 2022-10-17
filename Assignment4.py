@@ -1,6 +1,13 @@
 # Import packages
 import random
-from IPython.display import clear_output
+from this import d
+from IPython.display import clear_output 
+from pygame import mixer
+import os
+from os import system
+import time
+from time import sleep
+import sys
 
 # Set key variables
 KEY_LABEL = {"a":"left","s":"down","w":"up","d":"right","x":"exit"}
@@ -31,6 +38,13 @@ START_LOCATION = (1, 1)
 END_LOCATION = (5, 15)
 
 # Define functions
+
+# This function makes scrolling text. (this is borrowed from Konstantinos)
+def scrollTxt (text):
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(0.05)
 
 # Function to move the player
 def direct_yourself():
@@ -120,10 +134,16 @@ def reveal_map(discovery_map,location):
 
 
 def game_loop():
+   # os.system('clear')
+   # mixer.init()
+   # mixer.music.load("black-knight-121105.mp3") # Music file can only be MP3
+   # mixer.music.play()
+    # Then start a infinite loop
+
     # START GAME
-    print("Welcome to the Adventure game.")
-    print("The aim is to find your way through several rooms, locate the key, then make your way to the exit")
-    print("You can direct your movements using the following keys:")
+    scrollTxt("Welcome to the Adventure game.\n")
+    scrollTxt("The aim is to find your way through several rooms, locate the key, then make your way to the exit\n")
+    scrollTxt("You can direct your movements using the following keys:\n")
     print("w = up/forward")
     print("a = left")
     print("s = back/down")
@@ -149,6 +169,7 @@ def game_loop():
         # Move
         direction = direct_yourself()
         clear_output()
+        os.system('clear')
         if direction == "x":
             print("You have quit the game")
             return
