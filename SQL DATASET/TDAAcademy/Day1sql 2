@@ -1,0 +1,106 @@
+SELECT year, month, day
+  FROM [TutorialDB].[dbo].[surveys]
+
+SELECT TOP 10 *
+    FROM [TutorialDB].[dbo].[surveys]
+
+SELECT TOP 25 percent *
+    FROM [TutorialDB].[dbo].[surveys]
+
+--selecting unique values
+SELECT DISTINCT species_id
+    FROM [TutorialDB].[dbo].[surveys]
+
+--adding a calculation
+SELECT species_id, weight*1000
+    FROM [TutorialDB].[dbo].[surveys]
+
+--calculating and rounding
+SELECT species_id, ROUND(weight/1000.00,3)
+    FROM [TutorialDB].[dbo].[surveys]
+
+-- filtering
+SELECT *
+    FROM [TutorialDB].[dbo].[surveys]
+WHERE species_id='DM';
+
+--filtering with expressions
+SELECT *
+    FROM [TutorialDB].[dbo].[surveys]
+WHERE year >= 2000;
+
+--filtering with logic
+SELECT *
+FROM [TutorialDB].[dbo].[surveys]
+WHERE (year >=2000) AND (species_id = 'DM')
+
+SELECT *
+FROM [TutorialDB].[dbo].[surveys]
+WHERE (species_id = 'DM') OR (species_id = 'DO') OR (species_id = 'DS');
+
+-- Get post 2000 data on Dipodomys' species
+--These are in the surveys table, and we are interested in all columns
+SELECT * FROM [TutorialDB].[dbo].[surveys]
+-- Sampling year is in the column 'year', and we want to include 2000
+WHERE (year >= 2000)
+-- Dipodomys' species have the 'species_id' DM, DO and DS
+AND (species_id IN ('DM','DO', 'DS'));
+
+--Sorting
+SELECT *
+FROM species
+ORDER BY genus ASC, species DESC;
+
+-- Write a query that will select year, species_id and weight in kg from the surveys table, sorted with the largest weights at the top
+SELECT year, species_id, ROUND(weight/1000.00,1)
+FROM surveys
+ORDER BY weight DESC;
+
+-- Create a database
+CREATE DATABASE rebecca_db
+
+CREATE TABLE people (
+    person_id int,
+    last_name varchar(255),
+    first_name varchar(255),
+    job_title varchar(255),
+    report_to varchar(255)
+);
+
+INSERT INTO people (person_id, last_name, first_name, job_title)
+VALUES 
+(1,'Gru', 'Felonious','Super villain'),
+(3,'Kevin', 'Felonious','Super villain'),
+(4,'Scarlet', 'Overkill','Super villain'),
+(5,'Bob', 'Felonious','Super villain')
+
+-- insert if you have all values
+INSERT INTO people 
+VALUES (2, 'Nefario','Doctor','Super Villain','Gru')
+
+-- update a record
+update people
+set job_title = 'sidekick'
+WHERE person_id = 2
+
+--update two records
+update people
+set job_title = 'minion'
+WHERE person_id = 3 or person_id = 5
+
+-- update multiple
+UPDATE people 
+SET report_to = 'Nefario'
+WHERE job_title = 'minion'
+
+DELETE FROM people WHERE person_id=2
+DELETE FROM people WHERE person_id=1
+
+-- insert if you have all values
+INSERT INTO people 
+VALUES (2, 'Nefario','Doctor','Super Villain','Gru'),
+(1,'Gru', 'Felonious','Super villain',NULL)
+
+
+SELECT * 
+FROM people

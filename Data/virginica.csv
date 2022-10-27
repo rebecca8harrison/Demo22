@@ -1,0 +1,5 @@
+virginica,mean,min,max,std,outliers2sd%
+sepallength,6.59,4.90,7.90,0.63,2.00
+sepalwidth,2.97,2.20,3.80,0.32,4.00
+petallength,5.55,4.50,6.90,0.55,6.00
+petalwidth,2.03,1.40,2.50,0.27,0.00
