@@ -1,0 +1,5 @@
+setosa,mean,min,max,std,outliers2sd%
+sepallength,5.01,4.30,5.80,0.35,2.00
+sepalwidth,3.42,2.30,4.40,0.38,4.00
+petallength,1.46,1.00,1.90,0.17,4.00
+petalwidth,0.24,0.10,0.60,0.11,4.00
