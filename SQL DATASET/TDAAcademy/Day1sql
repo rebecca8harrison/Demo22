@@ -1,0 +1,283 @@
+SELECT year, month, day
+  FROM [TutorialDB].[dbo].[surveys]
+
+SELECT TOP 10 *
+    FROM [TutorialDB].[dbo].[surveys]
+
+SELECT TOP 25 percent *
+    FROM [TutorialDB].[dbo].[surveys]
+
+--selecting unique values
+SELECT DISTINCT species_id
+    FROM [TutorialDB].[dbo].[surveys]
+
+--adding a calculation
+SELECT species_id, weight*1000
+    FROM [TutorialDB].[dbo].[surveys]
+
+--calculating and rounding
+SELECT species_id, ROUND(weight/1000.00,3)
+    FROM [TutorialDB].[dbo].[surveys]
+
+-- filtering
+SELECT *
+    FROM [TutorialDB].[dbo].[surveys]
+WHERE species_id='DM';
+
+--filtering with expressions
+SELECT *
+    FROM [TutorialDB].[dbo].[surveys]
+WHERE year >= 2000;
+
+--filtering with logic
+SELECT *
+FROM [TutorialDB].[dbo].[surveys]
+WHERE (year >=2000) AND (species_id = 'DM')
+
+SELECT *
+FROM [TutorialDB].[dbo].[surveys]
+WHERE (species_id = 'DM') OR (species_id = 'DO') OR (species_id = 'DS');
+
+-- Get post 2000 data on Dipodomys' species
+--These are in the surveys table, and we are interested in all columns
+SELECT * FROM [TutorialDB].[dbo].[surveys]
+-- Sampling year is in the column 'year', and we want to include 2000
+WHERE (year >= 2000)
+-- Dipodomys' species have the 'species_id' DM, DO and DS
+AND (species_id IN ('DM','DO', 'DS'));
+
+--Sorting
+SELECT *
+FROM species
+ORDER BY genus ASC, species DESC;
+
+-- Write a query that will select year, species_id and weight in kg from the surveys table, sorted with the largest weights at the top
+SELECT year, species_id, ROUND(weight/1000.00,1)
+FROM surveys
+ORDER BY weight DESC;
+
+-- Create a database
+CREATE DATABASE rebecca_db
+
+CREATE TABLE people (
+    person_id int,
+    last_name varchar(255),
+    first_name varchar(255),
+    job_title varchar(255),
+    report_to varchar(255)
+);
+
+INSERT INTO people (person_id, last_name, first_name, job_title)
+VALUES 
+(1,'Gru', 'Felonious','Super villain'),
+(3,'Kevin', 'Felonious','Super villain'),
+(4,'Scarlet', 'Overkill','Super villain'),
+(5,'Bob', 'Felonious','Super villain')
+
+-- insert if you have all values
+INSERT INTO people 
+VALUES (2, 'Nefario','Doctor','Super Villain','Gru')
+
+-- update a record
+update people
+set job_title = 'sidekick'
+WHERE person_id = 2
+
+--update two records
+update people
+set job_title = 'minion'
+WHERE person_id = 3 or person_id = 5
+
+-- update multiple
+UPDATE people 
+SET report_to = 'Nefario'
+WHERE job_title = 'minion'
+
+DELETE FROM people WHERE person_id=2
+DELETE FROM people WHERE person_id=1
+
+-- insert if you have all values
+INSERT INTO people 
+VALUES (2, 'Nefario','Doctor','Super Villain','Gru'),
+(1,'Gru', 'Felonious','Super villain',NULL)
+
+
+
+
+-- Joining databases
+
+--- this is an inner join, you can also say INNER JOIN
+SELECT * 
+FROM surveys
+JOIN species
+ON surveys.species_id = species.species_id;
+
+-- LEFT join
+SELECT * 
+FROM surveys
+LEFT JOIN species
+ON surveys.species_id = species.species_id;
+
+-- RIGHT join
+
+SELECT * 
+FROM surveys
+RIGHT JOIN species
+ON surveys.species_id = species.species_id;
+
+-- Full outer join
+SELECT *
+FROM surveys
+FULL OUTER JOIN species
+ON surveys.species_id = species.species_id;
+
+--combine Join with aggregation
+SELECT plots.plot_type, AVG(surveys.weight) AS average_weight
+FROM surveys
+JOIN plots
+ON surveys.plot_id = plots.plot_id
+GROUP BY plots.plot_type;
+
+-- Replacing missing values with a specific value
+-- this one specifies that any missing value in sex is a 'U'
+SELECT species_id, sex, ISNULL(sex,'U') as gender
+FROM surveys;
+
+SELECT species_id, hindfoot_length, ISNULL(hindfoot_length,30) as hindfoot_length_new, 
+AVG(species.hindfoot_length_new) AS average_hindfoot_length
+FROM surveys;
+
+SELECT surveys.species_id, AVG(species.hindfoot_length_new) AS average_hindfoot_length
+FROM species
+JOIN surveys
+ON species.species_id = surveys.species_id
+GROUP BY species.species_id;
+
+--COUNT
+SELECT COUNT(*)
+FROM surveys;
+
+--count aggregates
+
+SELECT COUNT(*), MAX(weight)
+FROM surveys;
+
+SELECT COUNT(*), min(weight)
+FROM surveys
+
+--group-BY
+SELECT species_id, COUNT(*)
+FROM surveys
+GROUP BY species_id
+
+--ordering aggregated results
+SELECT species_id, COUNT(*)
+FROM surveys
+GROUP BY species_id
+ORDER BY COUNT(species_id);
+
+--aliases
+SELECT MAX(year) AS last_surveyed_year
+FROM surveys;
+
+--having (i.e only those that meet a condition)
+SELECT species_id, COUNT(species_id)
+FROM surveys
+GROUP BY species_id
+HAVING COUNT(species_id) > 10;
+
+-- creating views
+CREATE VIEW summer_2000 AS
+SELECT *
+FROM surveys
+WHERE year = 2000 AND (month >4 AND month < 10);
+
+-- then you can take a look at the view
+SELECT *
+FROM summer_2000
+WHERE species_id = 'PE'
+
+--dealing with NULL
+SELECT COUNT(*)
+FROM summer_2000
+WHERE sex!= 'M' OR sex is NULL;
+
+CREATE view before_2000_males AS
+SELECT *
+FROM surveys
+WHERE sex = 'M' and year < 2000
+
+SELECT * 
+FROM before_2000_males
+
+SELECT COUNT(*)
+FROM surveys
+WHERE (sex = 'M' or sex is null) and year < 2000
+
+SELECT species , count()
+
+SELECT  taxa, species, COUNT(species) AS no_species
+FROM species
+GROUP BY taxa, species
+HAVING COUNT(species) > 1;
+
+
+-- How many plots from each type are there
+SELECT plot_type, COUNT(plot_type) AS no_plot
+FROM plots
+GROUP BY plot_type
+
+--How many speciemns are of each sex are there for each year including those whose sex is unknown?
+SELECT year, sex,  ISNULL(sex,'U') AS sex_1, COUNT(*)
+FROM surveys
+GROUP BY year, sex;
+
+--How many specimens of each species were captured in each type of plot, excluding specimens of unknown species
+SELECT pl
+FROM surveys
+
+SELECT plots.plot_type, surveys.species_id, COUNT(surveys.species_id) AS no_species_by_plot
+FROM surveys
+JOIN plots
+ON surveys.plot_id = plots.plot_id
+WHERE surveys.species_id IS NOT NULL
+GROUP BY plots.plot_type, surveys.species_id;
+
+--What is the average weight of each taxa?
+SELECT species.taxa, AVG(weight) as avg_weight
+FROM surveys
+JOIN species
+ON surveys.species_id = species.species_id
+GROUP By species.taxa
+
+SELECT TOP 10 *
+FROM species
+--What is the minimu, maximum and average weight for each species of rodent
+SELECT species.species, MIN(surveys.weight) AS min_weight, MAX(surveys.weight) AS max_weight, AVG(surveys.weight) AS avg_weight
+FROM surveys
+JOIN species
+ON surveys.species_id = species.species_id
+WHERE species.taxa = 'Rodent' 
+GROUP By species.species
+
+-- What is the average hindfoot length for male and female rodent of each species? Is there a Male / Female difference?
+
+SELECT TOP 10 *
+FROM surveys
+
+SELECT species.species, surveys.sex, AVG(surveys.hindfoot_length) AS avg_hindfoot_length
+FROM surveys
+JOIN species
+ON surveys.species_id = species.species_id
+WHERE species.taxa = 'Rodent' 
+GROUP By species.species, surveys.sex
+ORDER BY species.species
+
+-- What is the average weight of each rodent species over the course of the years? Is there any noticeable trend for any of the species?
+SELECT species.species, surveys.year, AVG(surveys.weight) AS avg_weight
+FROM surveys
+JOIN species
+ON surveys.species_id = species.species_id
+WHERE species.taxa = 'Rodent' 
+GROUP By species.species, surveys.year
+ORDER BY species.species
