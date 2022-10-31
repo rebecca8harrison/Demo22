@@ -1,1 +1,5 @@
-id,name,win,distance_rabbit_fox,distance_rabbit_carrot,distance_rabbit_key,distance_rabbit_door,carrot_found,key_found,poison_found,poison_used,fox_killed,number_attempts
+id,name,win,distance_rabbit_fox_x,distance_rabbit_carrot_x,distance_rabbit_key_x,distance_rabbit_door_x,distance_rabbit_fox_y,distance_rabbit_carrot_y,distance_rabbit_key_y,distance_rabbit_door_y,carrot_found,key_found,poison_found,fox_alive,attempt_no
+1,test,False,0,0,0,0,0,0,0,0,True,True,Yes,False,1
+2,test,True,-10,1,-12,-5,0,11,10,12,True,True,No,True,1
+3,Becca,True,9,9,4,7,10,8,11,13,True,True,dropped,True,1
+4,Bob,True,3,6,1,-2,3,1,-6,-9,True,True,Yes,True,1

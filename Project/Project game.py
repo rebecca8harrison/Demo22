@@ -33,49 +33,46 @@ from os.path import exists
 # distance between rabbit and key at start:
 # distance between rabbit and exit at start:
 
-if exists('Project/ndf.csv'):
+if exists('Project/df.csv'):
     df = pd.read_csv('Project/df.csv')
 else:
-    df = pd.DataFrame(columns=['id',
-                            'name', 
-                            'win', 
-                            'distance_rabbit_fox',
-                            'distance_rabbit_carrot',
-                            'distance_rabbit_key',
-                            'distance_rabbit_door',
-                            'carrot_found',
-                            'key_found',
-                            'poison_found',
-                            'poison_used',
-                            'fox_killed',
-                            'number_attempts'])
-    df.astype({'id':'int32',
-            'win':'bool',
-            'distance_rabbit_fox': 'int32',
-            'distance_rabbit_carrot': 'int32',
-            'distance_rabbit_key': 'int32',
-            'distance_rabbit_door': 'int32',
-            'carrot_found':'int32',
-            'key_found':'int32',
-            'poison_found':'int32',
-            'poison_used':'int32',
-            'fox_killed':'bool',
-            'number_attempts':'int32',}).dtypes
+    d = {'id':[1],
+    'name':["test"],
+    'win':[False],
+    'distance_rabbit_fox_x':[0],
+    'distance_rabbit_carrot_x':[0],
+    'distance_rabbit_key_x':[0],
+    'distance_rabbit_door_x':[0],
+    'distance_rabbit_fox_y':[0],
+    'distance_rabbit_carrot_y':[0],
+    'distance_rabbit_key_y':[0],
+    'distance_rabbit_door_y':[0],
+    'carrot_found':[True],
+    'key_found':[True],
+    'poison_found':["Yes"],
+    'fox_alive':[False],
+    'attempt_no':[1]}
+    
+    df = pd.DataFrame(data=d)   
 
-    df.to_csv('Project/df.csv',index=False)
+    df.to_csv('/Users/rebeccaharrison/Documents/Python/Bootcamp/Project/df.csv',index=False)
 
+previous="x"
 previous_range = ["y","n"]
 while previous not in previous_range:
     
     previous = input("Have you played this game before? y/n?")
-    
+name="none"   
 if previous=="n":
     name = input("What is your name?")
-if previous=="y":
-    while name not in df['name']:
-        df['name'].loc[len(df)] = input("Please enter the name you have used when you last played this game")
-
-print(df)
+    attempt_no=1
+else:
+    names = set(df['name'])
+    print(names)
+    while name not in names:
+        name = input("Please enter the name from the list above that you have used when you last played this game")
+    attempt_no=df['name'].str.count(name)+1
+print("This is your",attempt_no,"at playing the game")
 # Set key variables
 KEY_LABEL = {"a":"move left","s":"move down","w":"move up","d":"move right","x":"exit"}
 KEY_MOVE = {"a":(0, -1),"s":(1 ,0 ),"w":(-1, 0),"d":(0, 1)}
@@ -110,13 +107,6 @@ WORLD_MAP = [
 # Create or load database
 
 ##### DEFINE FUNCTIONS
-
-# This function makes scrolling text. (this is borrowed from Konstantinos)
-def scrollTxt (text):
-    for char in text:
-        sys.stdout.write(char)
-        sys.stdout.flush()
-        time.sleep(0.05)
 
 # Function to move the player
 def direct_yourself(poison_found):
@@ -237,7 +227,7 @@ def print_map(rabbit, fox, carrot, poison, key,key_found, poison_found,carrot_fo
         print() #Causes the row to end
 
 
-def game_loop(df):
+def game_loop():
    # os.system('clear')
    # mixer.init()
    # mixer.music.load("black-knight-121105.mp3") # Music file can only be MP3
@@ -267,10 +257,14 @@ def game_loop(df):
     poison_location=valid_location()
     carrot_location=valid_location()
     door_location=valid_location(door=True)
-    distance_rabbit_fox=fox_location-location
-    distance_rabbit_carrot
-    distance_rabbit_key
-    distance_rabbit_door
+    distance_rabbit_fox_x=fox_location[0]-location[0]
+    distance_rabbit_fox_y=fox_location[1]-location[1]
+    distance_rabbit_carrot_x=carrot_location[0]-location[0]
+    distance_rabbit_carrot_y=carrot_location[1]-location[1]
+    distance_rabbit_key_x=key_location[0]-location[0]
+    distance_rabbit_key_y=key_location[1]-location[1]
+    distance_rabbit_door_x=door_location[0]-location[0]
+    distance_rabbit_door_y=door_location[1]-location[1]
 
 
     print_map(location, fox_location, carrot_location, poison_location, key_location,key_found, poison_found,carrot_found,fox_alive)
@@ -285,6 +279,7 @@ def game_loop(df):
         if direction == "e":
             poison_location=location
             poison_found="dropped"
+            poison_used=True
             print_map(location, fox_location, carrot_location, poison_location, key_location,key_found, poison_found,carrot_found,fox_alive)
             continue
         if direction == "x":
@@ -312,16 +307,39 @@ def game_loop(df):
             if key_found and carrot_found:
                 print("You found the exit, you are free and you win the game")
                 win=True
-                return df
                 break
             if not key_found:
                 print("You have found the exit but you don't have the key")
                 
             if  key_found and not carrot_found:
                 print("You have found the exit but you haven't eaten the carrot so don't have the energy to turn the key in the door")
-                
-df.loc[len(df)] = game_loop(df) 
+    d = {'id':[1],
+    'name':[""],
+    'win':[win],
+    'distance_rabbit_fox_x':[distance_rabbit_fox_x],
+    'distance_rabbit_carrot_x':[distance_rabbit_carrot_x],
+    'distance_rabbit_key_x':[distance_rabbit_key_x],
+    'distance_rabbit_door_x':[distance_rabbit_door_x],
+    'distance_rabbit_fox_y':[distance_rabbit_fox_y],
+    'distance_rabbit_carrot_y':[distance_rabbit_carrot_y],
+    'distance_rabbit_key_y':[distance_rabbit_key_y],
+    'distance_rabbit_door_y':[distance_rabbit_door_y],
+    'carrot_found':[carrot_found],
+    'key_found':[key_found],
+    'poison_found':[poison_found],
+    'fox_alive':[fox_alive],
+    'attempt_no':[1]}
+    
+    df = pd.DataFrame(data=d) 
+    return df
 
+df_game = game_loop() 
+df_game['id'][0]=max(df['id'])+1
+print(attempt_no)
+df_game['attempt_no'][0]=attempt_no
+df_game['name'][0]=name
+print(df_game)
+df = pd.concat([df,df_game])
+print(df)
+df.to_csv('/Users/rebeccaharrison/Documents/Python/Bootcamp/Project/df.csv',index=False)
 
-
-,win,distance_rabbit_fox,distance_rabbit_carrot,distance_rabbit_key,distance_rabbit_door,carrot_found,key_found,poison_found,poison_used,fox_killed,number_attempts]
