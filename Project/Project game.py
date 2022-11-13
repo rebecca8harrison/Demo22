@@ -71,7 +71,7 @@ else:
     print(names)
     while name not in names:
         name = input("Please enter the name from the list above that you have used when you last played this game")
-    attempt_no=df['name'].str.count(name)+1
+    attempt_no=len(df['name'].loc[df['name']==name])+1
 print("This is your",attempt_no,"at playing the game")
 # Set key variables
 KEY_LABEL = {"a":"move left","s":"move down","w":"move up","d":"move right","x":"exit"}
@@ -279,12 +279,11 @@ def game_loop():
         if direction == "e":
             poison_location=location
             poison_found="dropped"
-            poison_used=True
             print_map(location, fox_location, carrot_location, poison_location, key_location,key_found, poison_found,carrot_found,fox_alive)
             continue
         if direction == "x":
             print("You have quit the game")
-            return
+            break
         # Check location is valid, and if location is a door, or tells the room location
         location = move_if_valid(location,direction)
         if fox_alive:
@@ -334,10 +333,10 @@ def game_loop():
     return df
 
 df_game = game_loop() 
-df_game['id'][0]=max(df['id'])+1
+df_game.loc[0,'id']=max(df['id'])+1
 print(attempt_no)
-df_game['attempt_no'][0]=attempt_no
-df_game['name'][0]=name
+df_game.loc[0,'attempt_no']=attempt_no
+df_game.loc[0,'name']=name
 print(df_game)
 df = pd.concat([df,df_game])
 print(df)
