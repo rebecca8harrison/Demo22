@@ -9,7 +9,7 @@ import time
 
 # To set your enviornment variables in your terminal run the following line:
 # export 'BEARER_TOKEN'='<your_bearer_token>'
-bearer_token = "AAAAAAAAAAAAAAAAAAAAAJZWjwEAAAAAKpizadmukaYyiV5MyTV8deNw2Mk%3DaCNEsXZLmOH9RKfXQH73Kii4KvPcgqXQQlECb9KPtIpL6SO6v2"  # os.environ.get("BEARER_TOKEN")
+bearer_token = "XXXX"  # os.environ.get("BEARER_TOKEN")
 
 
 def bearer_oauth(r):
